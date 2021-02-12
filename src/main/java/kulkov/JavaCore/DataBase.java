@@ -7,12 +7,8 @@ import java.sql.SQLException;
 public class DataBase {
 	private static Connection connection;
 	
-	public static void connect()   {
-		try {
+	public static void connect() throws ClassNotFoundException, SQLException  {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:lesson.db");
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 	}
 }
