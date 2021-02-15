@@ -4,7 +4,7 @@ package kulkov.JavaCore;
 	Создать класс кота
 	Создать в бд таблицу с котами
 		Поля таблицы.
-		id  name    color(?)
+		id  name    color
 		
 	Написать метод извлечения котов
 	Метод добавления котов
@@ -37,6 +37,8 @@ public class Main {
 //		deleteItem(2);
 
 //		updateItem(3, cat4);
+		
+		Cat cat5 = getItem(6);
 		
 		showDB();
 		
@@ -75,6 +77,38 @@ public class Main {
 		} catch (SQLException throwables) {
 			throwables.printStackTrace();
 		}
+	}
+		
+	static Cat getItem(int n) {
+		
+		String resultCatName = null;
+		String resultCatColor = null;
+		Cat resultCat = new Cat(resultCatName, resultCatColor);
+		
+		connect();
+		
+		try {
+			
+			// Работа через подготовленные запросы.
+			statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM Cats2 WHERE CatID = " + Integer.toString(n));
+			while(rs.next())    {
+				resultCatName = rs.getString(2);
+				resultCatColor = rs.getString(3);
+			}
+			
+			close();
+			
+			if(resultCatName == null && resultCatColor == null) {
+				throw new NotInitializedException("Strings are not initialized.");
+			}
+			
+			resultCat = new Cat(resultCatName, resultCatColor);
+		} catch (SQLException | NotInitializedException throwables) {
+			throwables.printStackTrace();
+		}
+		
+		return resultCat;
 	}
 	
 	static void deleteItem(int n) {
