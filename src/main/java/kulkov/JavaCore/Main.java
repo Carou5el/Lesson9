@@ -19,7 +19,6 @@ public class Main {
 	private static Connection connection;
 	private static Statement statement;
 	private static String primaryLoad = "CREATE TABLE Cats2 (CatID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Name TEXT NOT NULL, Color TEXT NOT NULL);";
-	private static String primaryLoad2 = "INSERT INTO Cats2 (Name) values ('Barsik')";
 	
 	public static void main(String[] args) {
 		
@@ -34,6 +33,11 @@ public class Main {
 //		insertNewItem(cat2);
 //		insertNewItem(cat3);
 //		insertNewItem(cat4);
+
+//		deleteItem(2);
+
+//		updateItem(3, cat4);
+		
 		showDB();
 		
 	}
@@ -56,6 +60,7 @@ public class Main {
 			throwables.printStackTrace();
 		}
 	}
+	
 	static void insertNewItem(Cat cat1) {
 		connect();
 		
@@ -65,6 +70,36 @@ public class Main {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO Cats2 (Name, Color) values (?, ?);");
 			ps.setString(1, cat1.getName());
 			ps.setString(2, cat1.getColor());
+			ps.executeUpdate();
+			close();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
+	
+	static void deleteItem(int n) {
+		connect();
+		
+		try {
+			// Работа через подготовленные запросы.
+			statement = connection.createStatement();
+			PreparedStatement ps = connection.prepareStatement(("DELETE FROM Cats2 WHERE CatID = " + Integer.toString(n)));
+			ps.executeUpdate();
+			close();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
+	
+	static void updateItem(int n, Cat cat) {
+		connect();
+		
+		try {
+			// Работа через подготовленные запросы.
+			statement = connection.createStatement();
+			PreparedStatement ps = connection.prepareStatement(("UPDATE Cats2 SET Name = ?, Color = ? WHERE CatID = " + Integer.toString(n)));
+			ps.setString(1, cat.getName());
+			ps.setString(2, cat.getColor());
 			ps.executeUpdate();
 			close();
 		} catch (SQLException throwables) {
@@ -99,6 +134,7 @@ public class Main {
 //		}
 //		DataBase.close();
 	}
+	
 	static void connect()    {
 		try {
 			// Регистрация JDBC-драйвера.
